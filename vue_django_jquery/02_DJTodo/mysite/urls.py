@@ -16,8 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+from .views import HomeView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    path('', HomeView.as_view(), name='home'),  # 사이트 첫 화면 - 특정 앱에 속하지 않음
     path('todo/', include('todo.urls')),
 ]
