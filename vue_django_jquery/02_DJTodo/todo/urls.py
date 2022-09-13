@@ -11,4 +11,5 @@ urlpatterns = [
     path('<int:pk>/delete/', views.TodoDelV.as_view(), name="delete"),  # DeleteView
 
     path('mixin/', views.TodoMOMCV.as_view(), name="mixin"),  # MultipleObjectMixin, CreateView
+    path('<int:pk>/delete2/', views.TodoDelV2.as_view(), name="delete2"),  # DeleteView
 ]

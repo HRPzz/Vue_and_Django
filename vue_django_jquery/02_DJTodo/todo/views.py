@@ -21,6 +21,7 @@ class TodoLV(ListView):
     template_name = 'todo/todo_list.html'
 
 
+# todo_list.html 의 removeBtn 에 연결된 DeleteView
 class TodoDelV(DeleteView):
     model = Todo  # 특정 레코드 삭제해야 하므로 테이블 필요
     template_name = 'todo/todo_confirm_delete.html'
@@ -48,3 +49,20 @@ class TodoMOMCV(MultipleObjectMixin, CreateView):
     def post(self, request, *args, **kwargs):
         self.object_list = self.get_queryset()
         return super().post(request, *args, **kwargs)
+
+
+# todo_form_list.html 의 removeBtn 에 연결된 DeleteView
+class TodoDelV2(DeleteView):
+    model = Todo  # 특정 레코드 삭제해야 하므로 테이블 필요
+    success_url = reverse_lazy('todo:mixin')  # redirect
+
+    # DeleteView 의 get 메서드 오버라이딩
+    # - get 요청 오자마자 delete 실행 => 페이지 이동 없음 but 페이지 로딩 발생
+
+    # c.f. vue 는 페이지 이동 없음 and 페이지 로딩 없음 (개발자 도구 - Network 확인)
+
+    # c.f. 원래 get, post 로직
+    # - get -> form 보여줌 -> template_name 필요 => 페이지 이동 발생
+    # - post -> delete 호출
+    def get(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
