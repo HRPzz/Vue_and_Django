@@ -53,7 +53,7 @@
 </head>
 
 <body>
-    <div>
+    <div id="app">
 
         <h1>My Todo App !</h1>
         <strong>서로 할 일이나 의견을 공유해 봅시다.</strong>
@@ -66,15 +66,33 @@
         </div>
     
         <ul class="todoList">
-            <li>
-                <span>김석훈::: Django 와 Vue.js 연동 프로그램을 만들고 있습니다.</span>
+            <li v-for="todo in todoItems">
+                <span>{{ todo.name }}:: {{ todo.item }}</span>
                 <span class="removeBtn">&#x00D7</span>
             </li>
         </ul>
 
     </div>
 
-    <script></script>
+    <!-- vue cdn -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
+    
+    <script>
+        // vue instance
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                todoItems:[
+                    {name: '김석훈', item: 'Django 와 Vue.js 연동 프로그램을 만들고 있습니다.'},
+                    {name: '홍길동', item: '이름을 안쓰면 홍길동으로 나와요...'},
+                    {name: '이순신', item: '신에게는 아직 열두 척의 배가 있사옵니다.'},
+                    {name: '성춘향', item: '그네 타기'}, 
+                ],
+            },
+            methods: {},
+        })
+
+    </script>
 
 </body>
 </html>
