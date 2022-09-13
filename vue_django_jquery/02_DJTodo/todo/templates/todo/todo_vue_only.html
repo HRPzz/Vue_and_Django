@@ -1,115 +1,116 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vue-Django ToDo App</title>
+{% extends 'base.html' %}
 
-    <style>
-        body {
-            text-align: center;
-            background-color: #ddd;
-        }
-        .inputBox {
-            margin: auto;
-            width: 70%;
-            background: white;
-            height: 50px;
-            border-radius: 50px;
-            line-height: 50px;
-        }
-        .inputBox .name {
-            border-style: none;
-            border-bottom: 1px solid #ddd;
-            width: 70px;
-            padding-left: 20px;
-        }
-        .inputBox .item {
-            border-style: none;
-            border-bottom: 1px solid #ddd;
-            width: 400px;
-            margin-left: 50px;
-            padding-left: 20px;
-        }
-        .todoList {
-            list-style: none;
-            padding: 10px 0;
-            text-align: left;
-        }
-        .todoList li {
-            display: flex;
-            height: 50px;
-            line-height: 50px;
-            margin: 0.5rem 0;
-            padding: 0 0.9rem;
-            background: white;
-            border-radius: 5px;
-        }
-        .removeBtn {
-            margin-left: auto;
-            font-size: 20px;
-        }
-    </style>
-</head>
+{% block title %}todo_vue_only.html{% endblock %}
 
-<body>
-    <div id="app">
+{% block extra-style %}
+<style>
+    body {
+        text-align: center;
+        background-color: #ddd;
+    }
+    .inputBox {
+        margin: auto;
+        width: 70%;
+        background: white;
+        height: 50px;
+        border-radius: 50px;
+        line-height: 50px;
+    }
+    .inputBox .name {
+        border-style: none;
+        border-bottom: 1px solid #ddd;
+        width: 90px;
+        padding-left: 20px;
+        line-height: 20px;
+    }
+    .inputBox .item {
+        border-style: none;
+        border-bottom: 1px solid #ddd;
+        width: 400px;
+        margin-left: 50px;
+        padding-left: 20px;
+        line-height: 20px;
+    }
+    .todoList {
+        list-style: none;
+        padding: 10px 0;
+        text-align: left;
+    }
+    .todoList li {
+        display: flex;
+        height: 50px;
+        line-height: 50px;
+        margin: 0.5rem 0;
+        padding: 0 0.9rem;
+        background: white;
+        border-radius: 5px;
+    }
+    .removeBtn {
+        margin-left: auto;
+        font-size: 20px;
+    }
+</style>
+{% endblock %}
 
-        <h1>My Todo App !</h1>
-        <strong>서로 할 일이나 의견을 공유해 봅시다.</strong>
-        <br>
+{% block content %}
+<div id="app">
 
-        <div class="inputBox">
-            <input class="name" type="text" placeholder="name ..." v-model="name">
-            <input class="item" type="text" placeholder="type anything welcomed ..." v-model="newTodoItem" v-on:keyup.enter="add_todo()">
-            <button v-on:click="add_todo()">ADD</button>
-        </div>
-    
-        <ul class="todoList">
-            <li v-for="(todo, index) in todoItems">
-                <!-- vue 의 delimiters 옵션 설정으로 template language 문법 변경해서 사용 -->
-                <span>{ todo.name }:: { todo.item }</span>
-                <span class="removeBtn" v-on:click="remove_todo(index)">&#x00D7</span>
-            </li>
-        </ul>
+    <h1>My Todo App !</h1>
+    <strong>서로 할 일이나 의견을 공유해 봅시다.</strong>
+    <br>
 
+    <div class="inputBox">
+        <input class="name" type="text" placeholder="name ..." v-model="name">
+        <input class="item" type="text" placeholder="type anything welcomed ..." v-model="newTodoItem" v-on:keyup.enter="add_todo()">
+        <!-- 부트스트랩 버튼 -->
+        <button v-on:click="add_todo()" class="btn btn-primary btn-sm">ADD</button>
     </div>
 
-    <!-- vue cdn -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
-    
-    <script>
-        var vm = new Vue({
-            // django 와 vue 의 template language 문법이 겹쳐서 발생하는 에러 해결
-            delimiters: ['{', '}'],
+    <ul class="todoList">
+        <li v-for="(todo, index) in todoItems">
+            <!-- vue 의 delimiters 옵션 설정으로 template language 문법 변경해서 사용 -->
+            <span>{ todo.name }:: { todo.item }</span>
+            <span class="removeBtn" v-on:click="remove_todo(index)">&#x00D7</span>
+        </li>
+    </ul>
 
-            el: '#app',
-            data: {
-                name: '',
-                newTodoItem: '',
-                todoItems:[],
+</div>
+{% endblock %}
+
+{% block extra-script %}
+<!-- vue cdn -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
+
+<script>
+    var vm = new Vue({
+        // django 와 vue 의 template language 문법이 겹쳐서 발생하는 에러 해결
+        delimiters: ['{', '}'],
+
+        el: '#app',
+        data: {
+            name: '',
+            newTodoItem: '',
+            todoItems:[],
+        },
+        methods: {
+            add_todo: function() {
+                console.log("add_todo()...");
+
+                if (this.name == '') this.name = '홍길동';
+                if (this.newTodoItem == '') return;
+
+                this.todoItems.push({name: this.name, item: this.newTodoItem});
+            
+                this.name = '';
+                this.newTodoItem = '';
             },
-            methods: {
-                add_todo: function() {
-                    console.log("add_todo()...");
+            remove_todo: function(index) {
+                console.log("remove_todo()...");
 
-                    if (this.name == '') this.name = '홍길동';
-                    if (this.newTodoItem == '') return;
-
-                    this.todoItems.push({name: this.name, item: this.newTodoItem});
-                
-                    this.name = '';
-                    this.newTodoItem = '';
-                },
-                remove_todo: function(index) {
-                    console.log("remove_todo()...");
-
-                    this.todoItems.splice(index, 1);
-                },
+                this.todoItems.splice(index, 1);
             },
-        })
+        },
+    })
 
-    </script>
-
-</body>
-</html>
+</script>
+{% endblock %}
