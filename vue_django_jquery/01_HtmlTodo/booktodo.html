@@ -60,15 +60,19 @@
         <br>
 
         <div class="inputBox">
-            <input class="name" type="text" placeholder="name ...">
-            <input class="item" type="text" placeholder="type anything welcomed ...">
-            <button>ADD</button>
+            <!-- input 태그 데이터 바인딩(vue 와 html 간 양방향 연결): v-model -->
+            <input class="name" type="text" placeholder="name ..." v-model="name">
+            <!-- 엔터 누르면 todo 항목 추가 -->
+            <input class="item" type="text" placeholder="type anything welcomed ..." v-model="newTodoItem" v-on:keyup.enter="add_todo()">
+            <!-- 버튼 클릭하면 todo 항목 추가 -->
+            <button v-on:click="add_todo()">ADD</button>
         </div>
     
         <ul class="todoList">
-            <li v-for="todo in todoItems">
+            <li v-for="(todo, index) in todoItems">
                 <span>{{ todo.name }}:: {{ todo.item }}</span>
-                <span class="removeBtn">&#x00D7</span>
+                <!-- 버튼 클릭하면 todo 항목 삭제 -->
+                <span class="removeBtn" v-on:click="remove_todo(index)">&#x00D7</span>
             </li>
         </ul>
 
@@ -82,6 +86,8 @@
         var vm = new Vue({
             el: '#app',
             data: {
+                name: '',
+                newTodoItem: '',
                 todoItems:[
                     {name: '김석훈', item: 'Django 와 Vue.js 연동 프로그램을 만들고 있습니다.'},
                     {name: '홍길동', item: '이름을 안쓰면 홍길동으로 나와요...'},
@@ -89,7 +95,30 @@
                     {name: '성춘향', item: '그네 타기'}, 
                 ],
             },
-            methods: {},
+            methods: {
+                // todo 항목 추가
+                add_todo: function() {
+                    console.log("add_todo()...");
+
+                    if (this.name == '') this.name = '홍길동';
+                    if (this.newTodoItem == '') return;
+
+                    // 사용자 입력 항목 표시 (input 태그에서 데이터 바인딩해야 함)
+                    // - 대부분 vue 에서 html 로 데이터 전달됨, 반대 방향은 막혀 있음
+                    // - v-model 로 정의하면 양방향 데이터 전달 가능
+                    this.todoItems.push({name: this.name, item: this.newTodoItem});
+                
+                    // 표시한 후 입력 항목 클리어
+                    this.name = '';
+                    this.newTodoItem = '';
+                },
+                // todo 항목 삭제
+                remove_todo: function(index) {
+                    console.log("remove_todo()...");
+
+                    this.todoItems.splice(index, 1);
+                },
+            },
         })
 
     </script>
