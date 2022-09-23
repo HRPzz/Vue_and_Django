@@ -416,3 +416,4 @@ yarn-error.log
 # End of https://www.toptal.com/developers/gitignore/api/python,django,sass,node,vue,vuejs
 
 .gitmessage.txt
+v3DjangoVue
