@@ -95,12 +95,7 @@
         data: {
             name: '',
             todo: '',
-            todoList:[
-                {name: '김석훈', todo: 'Django 와 Vue.js 연동 프로그램을 만들고 있습니다.'},
-                {name: '홍길동', todo: '이름을 안쓰면 홍길동으로 나와요...'},
-                {name: '이순신', todo: '신에게는 아직 열두 척의 배가 있사옵니다.'},
-                {name: '성춘향', todo: '그네 타기'},
-            ],
+            todoList:[], // vue 의 axios.get 과 django 의 JsonResponse 를 통해 서버에서 가져온 데이터로 채워지게 됨
         },
 
         // 뷰 인스턴스가 생성되는 시점에 호출되는 메서드

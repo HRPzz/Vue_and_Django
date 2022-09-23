@@ -23,5 +23,6 @@ urlpatterns = [
 
     path('', views.HomeView.as_view(), name='home'),
     path('todo/', include('todo.urls')),
+    path('api/', include('api.urls')),
 ]
 
