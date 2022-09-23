@@ -63,8 +63,8 @@
     <br>
 
     <div class="inputBox">
-        <input class="name" type="text" placeholder="name ..." v-model="name">
-        <input class="item" type="text" placeholder="type anything welcomed ..." v-model="todo" v-on:keyup.enter="add_todo()">
+        <input class="name" type="text" placeholder="name ..." v-model.trim="name">
+        <input class="item" type="text" placeholder="type anything welcomed ..." v-model.trim="todo" v-on:keyup.enter="add_todo()">
         <!-- 부트스트랩 버튼 -->
         <button v-on:click="add_todo()" class="btn btn-primary btn-sm">ADD</button>
     </div>
@@ -72,10 +72,48 @@
     <ul class="todoList">
         <li v-for="(todo, index) in todoList">
             <!-- vue 의 delimiters 옵션 설정으로 template language 문법 변경해서 사용 -->
-            <span>{ todo.name }:: { todo.todo }</span>
+            <span>[[ todo.name ]]:: [[ todo.todo ]]</span>
             <span class="removeBtn" v-on:click="remove_todo(index)">x</span>
         </li>
     </ul>
 
 </div>
+{% endblock %}
+
+{% block extra-script %}
+<!-- vue cdn -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.10/dist/vue.js"></script>
+
+<script>
+    var vm = new Vue({
+        // vue 의 머스태시 문법과 django 의 템플릿 문법이 겹쳐서 발생하는 에러 해결
+        delimiters: ['[[', ']]'],
+
+        el: '#app',
+        data: {
+            name: '',
+            todo: '',
+            todoList:[
+                {name: '김석훈', todo: 'Django 와 Vue.js 연동 프로그램을 만들고 있습니다.'},
+                {name: '홍길동', todo: '이름을 안쓰면 홍길동으로 나와요...'},
+                {name: '이순신', todo: '신에게는 아직 열두 척의 배가 있사옵니다.'},
+                {name: '성춘향', todo: '그네 타기'},
+            ],
+        },
+        methods: {
+            add_todo: function() {
+                console.log("add_todo()...");
+                if (this.name == '') this.name = '홍길동';
+                if (this.todo == '') return;
+
+                this.todoList.push({name: this.name, todo: this.todo});
+                this.name = this.todo = '';
+            },
+            remove_todo: function(index) {
+                console.log("remove_todo()...", index);
+                this.todoList.splice(index, 1);
+            },
+        },
+    })
+</script>
 {% endblock %}
