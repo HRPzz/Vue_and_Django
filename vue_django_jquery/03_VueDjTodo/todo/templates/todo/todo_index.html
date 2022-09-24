@@ -129,7 +129,16 @@
                 if (this.name == '') this.name = '홍길동';
                 if (this.todo == '') return;
 
-                this.todoList.push({name: this.name, todo: this.todo});
+                var vm = this;
+                var postData = { name: this.name, todo: this.todo }; // 서버로 보낼 데이터
+                axios.post('/api/todo/create/', postData)
+                    .then(function (res) {
+                        console.log("POST RES", res);
+                        vm.todoList.push({id: res.data.id, name: res.data.name, todo: res.data.todo}); // 서버로부터 받은 데이터를 todoList 에 추가
+                    })
+                    .catch(function (err) {
+                        console.log("POST ERR", err);
+                    })
                 this.name = this.todo = '';
             },
             remove_todo: function(todo, index) {
@@ -141,7 +150,7 @@
                         console.log("DELETE RES", res);
 
                         // django 에서 테이블의 해당 레코드를 삭제한 다음 응답을 준 시점
-                        // => vue 에서 해당 항목을 안 보이게 처리하면 됨
+                        // => vue 에서 해당 항목을 안 보이게 처리
                         vm.todoList.splice(index, 1);
                     })
                     .catch(function (err) {
