@@ -73,7 +73,7 @@
         <li v-for="(todo, index) in todoList">
             <!-- vue 의 delimiters 옵션 설정으로 template language 문법 변경해서 사용 -->
             <span>[[ todo.name ]]:: [[ todo.todo ]]</span>
-            <span class="removeBtn" v-on:click="remove_todo(index)">x</span>
+            <span class="removeBtn" v-on:click="remove_todo(todo, index)">x</span>
         </li>
     </ul>
 
@@ -108,7 +108,12 @@
             fetch_all_todo: function () {
                 console.log("fetch_all_todo()...");
 
-                // 콜백 함수 안의 this 는 window 객체를 가리키므로 로컬 변수에 this 를 저장해서 사용하면 vue 객체를 가리키게 됨
+                // 콜백 함수 밖의 this 는 vue 객체를 가리킴
+                // 콜백 함수 안의 this 는 window 객체를 가리킴
+
+                // => 콜백 함수 안에서 vue 객체에 접근하는 방법?
+                // - 콜백 함수 밖에서 로컬 변수 vm 에 this 저장 (vue 객체)
+                // - 콜백 함수 안에서 this (window 객체) 가 아닌 로컬 변수 vm (vue 객체) 사용
                 var vm = this;
                 axios.get('/api/todo/list/')
                     .then(function (res) { // res: response
@@ -127,9 +132,21 @@
                 this.todoList.push({name: this.name, todo: this.todo});
                 this.name = this.todo = '';
             },
-            remove_todo: function(index) {
+            remove_todo: function(todo, index) {
                 console.log("remove_todo()...", index);
-                this.todoList.splice(index, 1);
+
+                var vm = this;
+                axios.delete('/api/todo/' + todo.id + '/delete/') // todo.id == todo.pk
+                    .then(function (res) {
+                        console.log("DELETE RES", res);
+
+                        // django 에서 테이블의 해당 레코드를 삭제한 다음 응답을 준 시점
+                        // => vue 에서 해당 항목을 안 보이게 처리하면 됨
+                        vm.todoList.splice(index, 1);
+                    })
+                    .catch(function (err) {
+                        console.log("DELETE ERR", err);
+                    })
             },
         },
     })
