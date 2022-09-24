@@ -126,8 +126,8 @@
             },
             add_todo: function() {
                 console.log("add_todo()...");
+                if (this.todo == '') return; // 아무 내용 없다면 ADD 동작 안 함
                 if (this.name == '') this.name = '홍길동';
-                if (this.todo == '') return;
 
                 var vm = this;
                 var postData = { name: this.name, todo: this.todo }; // 서버로 보낼 데이터
