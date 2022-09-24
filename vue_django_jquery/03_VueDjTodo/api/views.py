@@ -1,14 +1,18 @@
 from django.http import JsonResponse
 from django.views.generic.list import BaseListView
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from django.views.generic.edit import BaseDeleteView, BaseCreateView
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 import json
 from django.forms.models import model_to_dict
 
 from todo.models import Todo
 
+
+# csrftoken 이 없으면 생성하고 클라이언트(Vue)로 넘기는 데코레이터
+# => 클라이언트에서 axios post/delete 요청을 보낼 때 CSRF 쿠키를 사용할 수 있게 됨
+@method_decorator(ensure_csrf_cookie, name='dispatch')
 # 템플릿 처리(Mixin)가 필요 없으므로 Base 뷰를 상속받는 것이 좀 더 효율적
 class ApiTodoLV(BaseListView):
     model = Todo
@@ -22,8 +26,6 @@ class ApiTodoLV(BaseListView):
         return JsonResponse(data=todoList, safe=False)
 
 
-# csrf 유효성 검사 비활성화
-@method_decorator(csrf_exempt, name='dispatch')
 # 템플릿 처리(Mixin)가 필요 없으므로 Base 뷰를 상속받는 것이 좀 더 효율적
 class ApiTodoDelV(BaseDeleteView):
     model = Todo
@@ -35,8 +37,6 @@ class ApiTodoDelV(BaseDeleteView):
         return JsonResponse(data={}, status=204)
 
 
-# csrf 유효성 검사 비활성화
-@method_decorator(csrf_exempt, name='dispatch')
 # 템플릿 처리(Mixin)가 필요 없으므로 Base 뷰를 상속받는 것이 좀 더 효율적
 class ApiTodoCV(BaseCreateView):
     model = Todo

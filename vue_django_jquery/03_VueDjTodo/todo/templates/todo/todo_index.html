@@ -87,6 +87,9 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
+    axios.defaults.xsrfCookieName = 'csrftoken';
+    axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+
     var vm = new Vue({
         // vue 의 머스태시 문법과 django 의 템플릿 문법이 겹쳐서 발생하는 에러 해결
         delimiters: ['[[', ']]'],
@@ -143,6 +146,7 @@
             },
             remove_todo: function(todo, index) {
                 console.log("remove_todo()...", index);
+                if (confirm("Really delete ?") == false) return;
 
                 var vm = this;
                 axios.delete('/api/todo/' + todo.id + '/delete/') // todo.id == todo.pk
