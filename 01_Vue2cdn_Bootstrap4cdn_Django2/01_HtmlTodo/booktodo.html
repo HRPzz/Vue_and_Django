@@ -103,8 +103,8 @@
                 add_todo: function() {
                     console.log("add_todo()...");
 
-                    if (this.name == '') this.name = '홍길동';
                     if (this.newTodoItem == '') return;
+                    if (this.name == '') this.name = '홍길동';
 
                     // 사용자 입력 항목 표시 (input 태그에서 데이터 바인딩해야 함)
                     // - 대부분 vue 에서 html 로 데이터 전달됨, 반대 방향은 막혀 있음

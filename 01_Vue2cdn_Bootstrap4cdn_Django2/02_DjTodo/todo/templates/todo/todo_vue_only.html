@@ -96,8 +96,8 @@
             add_todo: function() {
                 console.log("add_todo()...");
 
-                if (this.name == '') this.name = '홍길동';
                 if (this.newTodoItem == '') return;
+                if (this.name == '') this.name = '홍길동';
 
                 this.todoItems.push({name: this.name, item: this.newTodoItem});
             
